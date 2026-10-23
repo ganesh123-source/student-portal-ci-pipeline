@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="box">
+    <h2>Dashboard</h2>
+    <p id="welcome-msg">Loading...</p>
+    <p id="user-email"></p>
+    <button id="logout-btn">Logout</button>
+  </div>
+
+  <script>
+    async function loadDashboard() {
+      const { data } = await db.auth.getSession();
+
+      // Not logged in? Send back to login
+      if (!data.session) { window.location.href = "index.html"; return; }
+
+      const user = data.session.user;
+      const { data: profile } = await db.from("profiles")
+        .select("full_name").eq("id", user.id).single();
+
+      document.getElementById("welcome-msg").textContent =
+        "Welcome, " + (profile ? profile.full_name : "Student");
+      document.getElementById("user-email").textContent = user.email;
+    }
+
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+      await db.auth.signOut();
+      window.location.href = "index.html";
+    });
+
+    loadDashboard();
+  </script>
+</body>
+</html>

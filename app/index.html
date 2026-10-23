@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="box">
+    <h2>Login</h2>
+
+    <label for="email">Email</label>
+    <input id="email" type="text">
+
+    <label for="password">Password</label>
+    <input id="password" type="password">
+
+    <button id="login-btn">Login</button>
+    <div id="error-msg" class="error"></div>
+
+    <div class="link">New here? <a id="register-link" href="register.html">Register</a></div>
+  </div>
+
+  <script>
+    const errorBox = document.getElementById("error-msg");
+
+    document.getElementById("login-btn").addEventListener("click", async () => {
+      errorBox.textContent = "";
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (email === "" || password === "") {
+        errorBox.textContent = "Email and password are required"; return;
+      }
+
+      const { error } = await db.auth.signInWithPassword({ email, password });
+      if (error) { errorBox.textContent = "Invalid email or password"; return; }
+
+      window.location.href = "dashboard.html";
+    });
+  </script>
+</body>
+</html>

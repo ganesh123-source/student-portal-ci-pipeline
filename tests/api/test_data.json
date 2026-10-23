@@ -1,0 +1,28 @@
+{
+  "invalid_signups": [
+    {
+      "case": "weak password",
+      "email": "test_{uid}@example.com",
+      "password": "abc",
+      "expected_statuses": [400, 422]
+    },
+    {
+      "case": "empty password",
+      "email": "test_{uid}@example.com",
+      "password": "",
+      "expected_statuses": [400, 422]
+    },
+    {
+      "case": "invalid email format",
+      "email": "not-an-email",
+      "password": "Test@1234",
+      "expected_statuses": [400, 422]
+    },
+    {
+      "case": "empty email",
+      "email": "",
+      "password": "Test@1234",
+      "expected_statuses": [400, 422]
+    }
+  ]
+}

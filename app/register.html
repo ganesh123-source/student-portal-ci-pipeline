@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="box">
+    <h2>Register</h2>
+
+    <label for="full-name">Full name</label>
+    <input id="full-name" type="text">
+
+    <label for="phone">Phone (optional)</label>
+    <input id="phone" type="text">
+
+    <label for="email">Email</label>
+    <input id="email" type="text">
+
+    <label for="password">Password</label>
+    <input id="password" type="password">
+
+    <button id="register-btn">Register</button>
+    <div id="error-msg" class="error"></div>
+
+    <div class="link">Already have an account? <a id="login-link" href="index.html">Login</a></div>
+  </div>
+
+  <script>
+    const errorBox = document.getElementById("error-msg");
+
+    document.getElementById("register-btn").addEventListener("click", async () => {
+      errorBox.textContent = "";
+
+      const fullName = document.getElementById("full-name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      // Validation rules
+      if (fullName === "") { errorBox.textContent = "Full name is required"; return; }
+      if (!/^\S+@\S+\.\S+$/.test(email)) { errorBox.textContent = "Enter a valid email"; return; }
+      if (password.length < 8 || !/\d/.test(password)) {
+        errorBox.textContent = "Password must be 8+ characters and include a number"; return;
+      }
+      if (phone !== "" && !/^\d{10}$/.test(phone)) {
+        errorBox.textContent = "Phone must be 10 digits"; return;
+      }
+
+      // Create the account in Supabase
+      const { data, error } = await db.auth.signUp({ email, password });
+      if (error) { errorBox.textContent = error.message; return; }
+
+      // Save extra details in our profiles table
+      const { error: profileError } = await db.from("profiles").insert({
+        id: data.user.id,
+        full_name: fullName,
+        phone: phone || null
+      });
+      if (profileError) { errorBox.textContent = profileError.message; return; }
+
+      window.location.href = "dashboard.html";
+    });
+  </script>
+</body>
+</html>
