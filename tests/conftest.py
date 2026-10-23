@@ -46,6 +46,8 @@ def driver(request):
     options = Options()
     if os.getenv("HEADLESS") == "1":     # needed later for the pipeline
         options.add_argument("--headless=new")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--window-size=1280,800")
     d = webdriver.Edge(options=options)
     yield d
