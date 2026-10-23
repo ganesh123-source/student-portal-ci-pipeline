@@ -3,6 +3,8 @@ import os
 import uuid
 import pytest
 from tests.api.api_client import signup, login
+import allure
+pytestmark = allure.feature("Auth API")
 
 DATA_FILE = os.path.join(os.path.dirname(__file__), "test_data.json")
 with open(DATA_FILE) as f:

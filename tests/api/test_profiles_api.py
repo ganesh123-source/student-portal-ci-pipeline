@@ -1,6 +1,7 @@
 import uuid
 from tests.api.api_client import create_profile, get_profiles
-
+import allure
+pytestmark = allure.feature("Profiles API")
 
 def test_create_own_profile(api_user):
     r = create_profile(api_user["token"], api_user["id"], "API Tester", "9876543210")

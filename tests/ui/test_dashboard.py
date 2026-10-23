@@ -1,7 +1,7 @@
 from tests.ui.pages.login_page import LoginPage
 from tests.ui.pages.dashboard_page import DashboardPage
-
-
+import allure
+pytestmark = allure.feature("Dashboard")
 def test_logout(driver, registered_user):
     """TC08"""
     login = LoginPage(driver)

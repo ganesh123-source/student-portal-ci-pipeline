@@ -1,5 +1,7 @@
 from tests.ui.pages.login_page import LoginPage
 from tests.ui.pages.dashboard_page import DashboardPage
+import allure
+pytestmark = allure.feature("Login")
 
 
 def test_login_valid(driver, registered_user):
@@ -11,7 +13,7 @@ def test_login_valid(driver, registered_user):
     page.wait_for_url_contains("dashboard.html")
     assert registered_user["name"] in DashboardPage(driver).welcome_text()
 
-
+@allure.title("TC06: Login fails with wrong password")
 def test_login_wrong_password(driver, registered_user):
     """TC06"""
     page = LoginPage(driver)

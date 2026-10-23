@@ -4,6 +4,7 @@ import subprocess
 import sys
 import time
 import uuid
+import allure
 
 import pytest
 from selenium import webdriver
@@ -41,13 +42,22 @@ def app_server():
 
 
 @pytest.fixture
-def driver():
+def driver(request):
     options = Options()
     if os.getenv("HEADLESS") == "1":     # needed later for the pipeline
         options.add_argument("--headless=new")
     options.add_argument("--window-size=1280,800")
     d = webdriver.Edge(options=options)
     yield d
+
+    # After the test: if it failed, attach a screenshot to the report
+    result = getattr(request.node, "rep_call", None)
+    if result is not None and result.failed:
+        allure.attach(
+            d.get_screenshot_as_png(),
+            name="failure-screenshot",
+            attachment_type=allure.attachment_type.PNG,
+        )
     d.quit()
 
 
@@ -77,3 +87,9 @@ def cleanup_test_users():
     delete_test_users()      # clear leftovers from older runs
     yield
     delete_test_users()      # clear users created by this run
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+    setattr(item, "rep_" + report.when, report)

@@ -1,4 +1,6 @@
 import pytest
+import allure
+pytestmark = allure.feature("Registration")
 from tests.ui.pages.register_page import RegisterPage
 from tests.ui.pages.dashboard_page import DashboardPage
 
