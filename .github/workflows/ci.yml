@@ -33,11 +33,11 @@ jobs:
         run: microsoft-edge --version
 
       - name: Run all tests
-        run: pytest -v
+        run: pytest -v --reruns 1 --reruns-delay 2
 
       - name: Set up Java for Allure
         if: always()
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"

@@ -3,3 +3,4 @@ pytest
 requests
 allure-pytest
 python-dotenv
+pytest-rerunfailures

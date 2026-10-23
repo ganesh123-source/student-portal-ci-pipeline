@@ -44,12 +44,14 @@ def app_server():
 @pytest.fixture
 def driver(request):
     options = Options()
-    if os.getenv("HEADLESS") == "1":     # needed later for the pipeline
+    if os.getenv("HEADLESS") == "1":     # used by the pipeline
         options.add_argument("--headless=new")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-gpu")
     options.add_argument("--window-size=1280,800")
     d = webdriver.Edge(options=options)
+    d.set_page_load_timeout(30)
     yield d
 
     # After the test: if it failed, attach a screenshot to the report
